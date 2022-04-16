@@ -5,18 +5,19 @@ class Node:
         self.right_child = None
         self.function = function
         self.parent = None
-        self.variable_count = 0
+        self.variable_count=None
 
 
 # BDD tree
 class BDD:
-    # initiatior with root of the tree,order and used nodes stored in memory
+    # constructor with root of the tree,order of boolean arguments, num of unique nodes, num of variable count
+    # and a dictiory that stores all used nodes
     def __init__(self):
         self.root = None
         self.order = None
         self.used_nodes = {}
-        self.pocet_uzlov = 0
-        self.pocet_premennych = 0
+        self.unique_nodes = 0
+        self.variable_count = 0
 
     # fucntion which creates the root and starts the creation of the tree
     def create(self, function, order):
@@ -24,8 +25,8 @@ class BDD:
         self.order = order
         self._create(self.root.function, self.root, self.order)
         self.reduce(self.root)
-        self.pocet_uzlov = len(self.used_nodes)
-        self._variable_count(self.root)
+        self.unique_nodes = len(self.used_nodes)
+        self.variable_count = self.root.variable_count
         return self.root
 
     # function which creates additional nodes for the tree and calls itself recursivly
@@ -80,40 +81,41 @@ class BDD:
             current_node.right_child = (self.reduce(Node(1)))  # creation of new node with reduction
 
         # setting current_node variable count for correct functioning of the use function in BDD tree
-        current_node.variable_count = self._return_variable_count(current_node.function)
+        current_node.variable_count = len(order)
 
         # setting current node as parent for newly created nodes
         current_node.left_child.parent = current_node
         current_node.right_child.parent = current_node
 
         # checking if node is redundant
-        if self.check_redundant(current_node) == True:
+        try:
+            if self.check_redundant(current_node) == True:
 
-            if current_node == current_node.parent.left_child:
-                current_node.parent.left = current_node.left_child
-                current_node = current_node.left_child;
-                self._create(current_node.function, current_node,
-                             order[1:])  # recursion to create children for reduced node
+                if current_node == current_node.parent.left_child:
+                    current_node.parent.left_child = current_node.left_child
+                    current_node = current_node.left_child
+                    self._create(current_node.function, current_node,
+                                 order[1:])  # recursion to create children for reduced node
 
+                else:
+                    current_node.parent.right_child = current_node.right_child
+                    current_node = current_node.right_child
+                    self._create(current_node.function, current_node,
+                                 order[1:])  # recursion to create children for reduced node
+
+            # if node is not redundant continue traversing tree
             else:
-                current_node.parent.right_child = current_node.right_child
-                current_node = current_node.right_child
-                self._create(current_node.function, current_node,
-                             order[1:])  # recursion to create children for reduced node
-
-        #if node is not redundant continue traversing tree
-        else:
-            # calling this function recursivly to traverse the tree
-            self._create(current_node.left_child.function, current_node.left_child, order[1:])
-            self._create(current_node.right_child.function, current_node.right_child, order[1:])
-
-
-    #function which returns list of arguments for left_child
+                # calling this function recursivly to traverse the tree
+                self._create(current_node.left_child.function, current_node.left_child, order[1:])
+                self._create(current_node.right_child.function, current_node.right_child, order[1:])
+        except:
+            ...
+    # function which returns list of arguments for left_child
     def _create_left_child(self, current_function, order: list):
         left_child = []
         for i in range(len(current_function)):
             if current_function[i] == "!" + order[0]:
-                return 1 #returns 1 if we need to create a Node with value 1
+                return 1  # returns 1 if we need to create a Node with value 1
             index = current_function[i].find(order[0])  # get index of current order to dissassamble current function
 
             if ("!" + order[0]) in current_function[i]:
@@ -130,7 +132,7 @@ class BDD:
         right_child = []
         for i in range(len(current_function)):
             if current_function[i] == order[0]:
-                return 1 #returns 1 if we need to create a Node with value 1
+                return 1  # returns 1 if we need to create a Node with value 1
             index = current_function[i].find(order[0])  # get index of current order to dissassamble current function
             if order[0] in current_function[i] and current_function[i][index - 1] != "!":
                 if self._removeChar(current_function[i], order[0]) != "":
@@ -145,14 +147,14 @@ class BDD:
     def _removeChar(self, function, remove_char):
         return function.replace(remove_char, "")
 
-    #helper function which return length
+    # helper function which return length
     def _return_variable_count(self, function):
         if function is int:
             return 0
-        current_function=function
-        unique_variables=[]
-        current_function=current_function.replace("!", "")
-        current_function=current_function.replace("+", "")
+        current_function = function
+        unique_variables = []
+        current_function = current_function.replace("!", "")
+        current_function = current_function.replace("+", "")
         for i in range(len(current_function)):
             if current_function[i] not in unique_variables:
                 unique_variables.append(current_function[i])
@@ -172,7 +174,7 @@ class BDD:
             if input[i] != "0" and input[i] != "1":
                 return -1
 
-        if len(input) != self.pocet_premennych:  # if input is incorrect
+        if len(input) != self.variable_count:  # if input is incorrect
             return -2
 
         else:
@@ -180,17 +182,23 @@ class BDD:
             if result != 1 and result != 0:
                 return -3
             else:
-                return result
+                if result == 1:
+                    return True
+                else:
+                    return False
 
     # function which traverses the tree recursivly
     def _use(self, current_node, direction):
-        index = len(direction) - current_node.variable_count
-        if index == len(direction):
+        if current_node.variable_count==None:
             return current_node.function
-        elif direction[index] == "0" and current_node.left_child:
-            return self._use(current_node.left_child, direction)
-        elif direction[index] == "1" and current_node.right_child:
-            return self._use(current_node.right_child, direction)
+
+        else:
+            index = len(direction) - current_node.variable_count
+            if direction[index] == "0" and current_node.left_child:
+                return self._use(current_node.left_child, direction)
+            elif direction[index] == "1" and current_node.right_child:
+                return self._use(current_node.right_child, direction)
+
 
     # function which reduces current node if it was already created
     def reduce(self, node):
@@ -211,16 +219,6 @@ class BDD:
             return False
         except:
             return False
-
-    #function which sets in current tree object variable count
-    def _variable_count(self, root):
-        result = 0
-        function = []
-        for i in range(len(root.function)):
-            if root.function[i] not in function and root.function[i] != "+" and root.function[i] != "!":
-                function.append(root.function[i])
-                result += 1
-        self.pocet_premennych = result
 
     # visualization of the tree without corrent pointer showcase
     # URL = https://stackoverflow.com/questions/34012886/print-binary-tree-level-by-level-in-python
@@ -273,10 +271,5 @@ class BDD:
         zipped_lines = zip(left_child, right_child)
         lines = [first_line, second_line] + [a + u * ' ' + b for a, b in zipped_lines]
         return lines, n + m + u, max(p, q) + 2, n + u // 2
-
-
-tree = BDD()
-
-tree.create("A!C+ABC+!AB+!BC", ['A', 'B', 'C'])
 
 

@@ -272,8 +272,4 @@ class BDD:
         lines = [first_line, second_line] + [a + u * ' ' + b for a, b in zipped_lines]
         return lines, n + m + u, max(p, q) + 2, n + u // 2
 
-#
-tree = BDD()
-tree.create("ICD!L!B+AEFGHJKM",['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'])
-tree.display()
-print(tree.use("0000000001110"))
+
