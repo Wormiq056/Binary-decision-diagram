@@ -116,7 +116,6 @@ class BDD:
         for i in range(len(current_function)):
             if current_function[i] == "!" + order[0]:
                 return 1  # returns 1 if we need to create a Node with value 1
-            index = current_function[i].find(order[0])  # get index of current order to dissassamble current function
 
             if ("!" + order[0]) in current_function[i]:
                 if self._removeChar(current_function[i], "!" + order[0]) != "":

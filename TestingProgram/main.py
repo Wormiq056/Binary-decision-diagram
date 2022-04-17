@@ -1,5 +1,6 @@
 import sys
 import time
+import random
 
 from BDD import BDD_tree as BDD
 
@@ -7,10 +8,9 @@ variable5_list = ['A', 'B', 'C', 'D', 'E']
 variable9_list = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
 variable13_list = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M']
 variable14_list = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N']
+
+
 variable15_list = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O']
-
-
-
 def evaluate(function, values):
     result = 0
     variable_values = {}
@@ -249,7 +249,7 @@ def test15():
         print("Tesiting " + str(i + 1))
         for j in range(1000):
             creation_t1 = time.time()  # zaciatocny cas
-
+            choice=random.choice(testvalues15)
             tree = BDD.BDD()
             tree.create(testBfunc15[i], variable15_list)
 
@@ -258,16 +258,16 @@ def test15():
 
             use_t1 = time.time()
 
-            tree_result = tree.use(testvalues15[j])
+            tree_result = tree.use(choice)
 
             use_t2 = time.time()
             use_time =use_time+ use_t2 - use_t1
-            evaluate_result = evaluate(testBfunc15[i], testvalues15[j])
+            evaluate_result = evaluate(testBfunc15[i], choice)
             reduction=reduction +(len(tree.used_nodes)/((2**16)-1))
             if tree_result != evaluate_result:
                 print("Tree was incorrect")
                 print(testBfunc15[j])
-                print(testvalues15[i])
+                print(choice)
                 break
     time2 = time.time()
     whole_time = time2 - time1
@@ -279,7 +279,7 @@ def test15():
     print(incorrect_tree)
 
 #test5()
-#test9()
+test9()
 #test13()
 #test14()
 #test15()
