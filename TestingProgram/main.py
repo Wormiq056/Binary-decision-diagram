@@ -83,92 +83,109 @@ with open("testData/testvalues15.txt", "r") as file:
     testvalues15 = file.read().split("\n")
 
 
+#test with 5 unique variables as shown in documentation
 def test5():
-    creation_time = 0
-    use_time = 0
-    incorrect_tree = 0
+    print("********Starting test for 5 boolean functions with every possible argument combination********")
+    print('\n')
+    creation_time = 0 #variable to store creation time of the tree
+    use_time = 0 #variable to store use function time
     time1 = time.time()
-    reduction=0
+    reduction=0 #variable to store reduction % of the tree
     for i in range(len(testBfunc5)):
-        print("Tesiting " + str(i + 1))
+        print("Testing is " + str(i + 1)+"% complete")
         for j in range(len(testvalues5)):
-            creation_t1 = time.time()  # zaciatocny cas
+            creation_t1 = time.time()  #
 
             tree = BDD.BDD()
-            tree.create(testBfunc5[i], variable5_list)
+            tree.create(testBfunc5[i], variable5_list) #creation of tree
 
             creation_t2 = time.time()
             creation_time += creation_t2 - creation_t1
 
             use_t1 = time.time()
 
-            tree_result = tree.use(testvalues5[j])
+            tree_result = tree.use(testvalues5[j]) #using tree
 
             use_t2 = time.time()
             use_time =use_time+ use_t2 - use_t1
-            evaluate_result = evaluate(testBfunc5[i], testvalues5[j])
+            evaluate_result = evaluate(testBfunc5[i], testvalues5[j]) #getting evaluation of function
             reduction=reduction +(len(tree.used_nodes)/((2**6)-1))
-            if tree_result != evaluate_result:
+            if tree_result != evaluate_result: #if tree was created inccorectly
                 print("Tree was incorrect")
                 print(testBfunc5[j])
                 print(testvalues5[i])
                 break
     time2 = time.time()
     whole_time = time2 - time1
-    print(creation_time)
-    print(use_time)
-    print(whole_time)
+    print("\n")
+    print("******Test results******")
+    print("Average time to test every possible combination for 1 boolean function:")
+    print(str(whole_time/100)+" seconds")
+    print("Averige time for creation of BDD tree:")
+    print(str(creation_time/100/32)+" seconds")
+    print("Average time for using the tree function use()")
+    print(str(use_time/100/32)+" seconds")
+    print("Average reduction of the tree:")
     reduction=reduction/32
-    print(100-reduction)
-    print(incorrect_tree)
+    print(str(100-reduction)+"%")
 
+#test with 9 unique variables as shown in documentation
 def test9():
-    creation_time = 0
-    use_time = 0
-    incorrect_tree = 0
+    print("********Starting test for 9 boolean functions with every possible argument combination********")
+    print('\n')
+    creation_time = 0 #variable to store creation time of the tree
+    use_time = 0 #variable to store use function time
     time1 = time.time()
-    reduction=0
+    reduction=0 #variable to store reduction % of the tree
     for i in range(len(testBfunc9)):
-        print("Tesiting " + str(i + 1))
+        print("Testing is " + str(i + 1)+"% complete")
         for j in range(len(testvalues9)):
-            creation_t1 = time.time()  # zaciatocny cas
+            creation_t1 = time.time()  #
 
             tree = BDD.BDD()
-            tree.create(testBfunc9[i], variable9_list)
+            tree.create(testBfunc9[i], variable9_list) #creation of tree
 
             creation_t2 = time.time()
             creation_time += creation_t2 - creation_t1
 
             use_t1 = time.time()
 
-            tree_result = tree.use(testvalues9[j])
+            tree_result = tree.use(testvalues9[j]) #using tree
 
             use_t2 = time.time()
             use_time =use_time+ use_t2 - use_t1
-            evaluate_result = evaluate(testBfunc9[i], testvalues9[j])
+            evaluate_result = evaluate(testBfunc9[i], testvalues9[j]) #getting evaluation of function
             reduction=reduction +(len(tree.used_nodes)/((2**10)-1))
-            if tree_result != evaluate_result:
+            if tree_result != evaluate_result: #if tree was created inccorectly
                 print("Tree was incorrect")
                 print(testBfunc9[j])
                 print(testvalues9[i])
                 break
     time2 = time.time()
     whole_time = time2 - time1
-    print(creation_time)
-    print(use_time)
-    print(whole_time)
-    reduction=reduction/512
-    print(100-reduction)
-    print(incorrect_tree)
+    print("\n")
+    print("******Test results******")
+    print("Average time to test every possible combination for 1 boolean function:")
+    print(str(whole_time/100)+" seconds")
+    print("Averige time for creation of BDD tree:")
+    print(str(creation_time/100/2**9)+" seconds")
+    print("Average time for using the tree function use()")
+    print(str(use_time/100/2**9)+" seconds")
+    print("Average reduction of the tree:")
+    reduction=reduction/2**9
+    print(str(100-reduction)+"%")
 
+#test with 13 unique variables as shown in documentation
 def test13():
+    print("********Starting test for 13 boolean functions with every possible argument combination********")
+    print('\n')
     creation_time = 0
     use_time = 0
     incorrect_tree = 0
     time1 = time.time()
     reduction=0
     for i in range(len(testBfunc13)):
-        print("Tesiting " + str(i + 1))
+        print("Testing is " + str(i + 1)+"% complete")
         for j in range(len(testvalues13)):
             creation_t1 = time.time()  # zaciatocny cas
 
@@ -193,21 +210,29 @@ def test13():
                 break
     time2 = time.time()
     whole_time = time2 - time1
-    print(creation_time)
-    print(use_time)
-    print(whole_time)
-    reduction=reduction/8192
-    print(100-reduction)
-    print(incorrect_tree)
+    print("\n")
+    print("******Test results******")
+    print("Average time to test every possible combination for 1 boolean function:")
+    print(str(whole_time / 100) + " seconds")
+    print("Averige time for creation of BDD tree:")
+    print(str(creation_time / 100 / 2 ** 13) + " seconds")
+    print("Average time for using the tree function use()")
+    print(str(use_time / 100 / 2 ** 13) + " seconds")
+    print("Average reduction of the tree:")
+    reduction = reduction / 2 ** 13
+    print(str(100 - reduction) + "%")
 
+#test with 14 unique variables as shown in documentation
 def test14():
+    print("********Starting test for 14 boolean functions with every possible argument combination********")
+    print('\n')
     creation_time = 0
     use_time = 0
     incorrect_tree = 0
     time1 = time.time()
     reduction=0
     for i in range(len(testBfunc14)):
-        print("Tesiting " + str(i + 1))
+        print("Testing is " + str(i + 1)+"% complete")
         for j in range(len(testvalues14)):
             creation_t1 = time.time()  # zaciatocny cas
 
@@ -232,21 +257,29 @@ def test14():
                 break
     time2 = time.time()
     whole_time = time2 - time1
-    print(creation_time)
-    print(use_time)
-    print(whole_time)
-    reduction=reduction/16384
-    print(100-reduction)
-    print(incorrect_tree)
+    print("\n")
+    print("******Test results******")
+    print("Average time to test every possible combination for 1 boolean function:")
+    print(str(whole_time / 100) + " seconds")
+    print("Averige time for creation of BDD tree:")
+    print(str(creation_time / 100 / 2 ** 14) + " seconds")
+    print("Average time for using the tree function use()")
+    print(str(use_time / 100 / 2 ** 14) + " seconds")
+    print("Average reduction of the tree:")
+    reduction = reduction / 2 ** 14
+    print(str(100 - reduction) + "%")
 
+#test with 15 unique variables as shown in documentation
 def test15():
+    print("********Starting test for 15 boolean functions with every possible argument combination********")
+    print('\n')
     creation_time = 0
     use_time = 0
     incorrect_tree = 0
     time1 = time.time()
     reduction=0
     for i in range(len(testBfunc15)):
-        print("Tesiting " + str(i + 1))
+        print("Testing is " + str(i + 1)+"% complete")
         for j in range(1000):
             creation_t1 = time.time()  # zaciatocny cas
             choice=random.choice(testvalues15)
@@ -271,15 +304,20 @@ def test15():
                 break
     time2 = time.time()
     whole_time = time2 - time1
-    print(creation_time)
-    print(use_time)
-    print(whole_time)
-    reduction=reduction/1000
-    print(100-reduction)
-    print(incorrect_tree)
+    print("\n")
+    print("******Test results******")
+    print("Average time to test every possible combination for 1 boolean function:")
+    print(str(whole_time / 100) + " seconds")
+    print("Averige time for creation of BDD tree:")
+    print(str(creation_time / 100 / 1000) + " seconds")
+    print("Average time for using the tree function use()")
+    print(str(use_time / 100 / 1000) + " seconds")
+    print("Average reduction of the tree:")
+    reduction = reduction / 1000
+    print(str(100 - reduction) + "%")
 
 #test5()
-test9()
-#test13()
+#test9()
+test13()
 #test14()
 #test15()
