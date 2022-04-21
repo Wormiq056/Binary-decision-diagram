@@ -5,7 +5,7 @@ class Node:
         self.right_child = None
         self.function = function
         self.parent = None
-        self.variable_count=None
+        self.variable_count = None
 
 
 # BDD tree
@@ -110,13 +110,13 @@ class BDD:
                 self._create(current_node.right_child.function, current_node.right_child, order[1:])
         except:
             ...
+
     # function which returns list of arguments for left_child
     def _create_left_child(self, current_function, order: list):
         left_child = []
         for i in range(len(current_function)):
             if current_function[i] == "!" + order[0]:
                 return 1  # returns 1 if we need to create a Node with value 1
-            index = current_function[i].find(order[0])  # get index of current order to dissassamble current function
 
             if ("!" + order[0]) in current_function[i]:
                 if self._removeChar(current_function[i], "!" + order[0]) != "":
@@ -189,7 +189,7 @@ class BDD:
 
     # function which traverses the tree recursivly
     def _use(self, current_node, direction):
-        if current_node.variable_count==None:
+        if current_node.variable_count == None:
             return current_node.function
 
         else:
@@ -198,7 +198,6 @@ class BDD:
                 return self._use(current_node.left_child, direction)
             elif direction[index] == "1" and current_node.right_child:
                 return self._use(current_node.right_child, direction)
-
 
     # function which reduces current node if it was already created
     def reduce(self, node):
@@ -272,4 +271,6 @@ class BDD:
         lines = [first_line, second_line] + [a + u * ' ' + b for a, b in zipped_lines]
         return lines, n + m + u, max(p, q) + 2, n + u // 2
 
-
+tree = BDD()
+tree.create("AB+CD+EF",['A','B','C','D','E','F'])
+print("test")
