@@ -93,12 +93,14 @@ class BDD:
 
                 if current_node == current_node.parent.left_child:
                     current_node.parent.left_child = current_node.left_child
+                    self.used_nodes.pop(current_function) # clearing memory
                     current_node = current_node.left_child
                     self._create(current_node.function, current_node,
                                  order[1:])  # recursion to create children for reduced node
 
                 else:
                     current_node.parent.right_child = current_node.right_child
+                    self.used_nodes.pop(current_function) # clearing memory
                     current_node = current_node.right_child
                     self._create(current_node.function, current_node,
                                  order[1:])  # recursion to create children for reduced node
@@ -272,4 +274,6 @@ class BDD:
         lines = [first_line, second_line] + [a + u * ' ' + b for a, b in zipped_lines]
         return lines, n + m + u, max(p, q) + 2, n + u // 2
 
-
+tree = BDD()
+tree.create("AB+CD+EF",['A','B','C','D','E','F'])
+print("test")
